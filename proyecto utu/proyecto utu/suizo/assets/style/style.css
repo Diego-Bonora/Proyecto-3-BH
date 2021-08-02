@@ -1,0 +1,131 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* HEADER > NAV --- START  */
+.header {
+  background-color: grey;
+  color: black;
+}
+
+.header .title-container {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header .title {
+  display: flex;
+  margin: 0;
+  padding: 0rem 0.4rem;
+  text-align: left;
+}
+.button-a {
+  color: black;
+  text-decoration: none;
+  background-color: white;
+  border-radius: 5px;
+  margin: 10px 0px 1px;
+}
+
+.open-nav {
+  display: inline;
+  height: 1.5rem;
+  padding-right: 0.5rem;
+}
+
+.open-nav img {
+  height: 100%;
+}
+
+.header .nav {
+  display: none;
+}
+
+.header .nav.active {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+ul {
+  list-style: none;
+  display: flex;
+  position: absolute;
+  background-color: grey;
+  flex-direction: column
+
+}
+
+li {
+  color: #fff;
+  background-color: grey;
+  padding: 0.3rem;
+  text-align: right;
+  width: 7%;
+
+}
+
+.nav-link {
+  background-color: grey;
+  color: #fff;
+  padding: 0.3rem;
+  text-align: right;
+  width: 90px;
+}
+/* HEADER > NAV --- END  */
+
+/* FORM > LOGIN --- START  */
+.form {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100vh - 40px);
+}
+.form div {
+  border: black solid 2px;
+    border-radius: 10px;
+}
+
+.sub-title {
+  padding: 0rem 0rem 2rem;
+  text-align: center;
+}
+
+#login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+#login div {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  border: 0;
+}
+
+#login button {
+  height: 40px;
+  width: 100px;
+  background-color: navajowhite;
+  border-radius: 10px;
+}
+
+#form-input{
+  width: 300px;
+  height: 20px;
+}
+
+/* FORM > LOGIN --- END  */
+
+/* INICIO --- START  */
+body {
+  background: rgb(245, 89, 89);
+}
+
+/* INICIO --- END  */
