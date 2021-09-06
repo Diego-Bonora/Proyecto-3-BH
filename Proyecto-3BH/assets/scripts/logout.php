@@ -1,9 +1,8 @@
 <?php
-  session_start();
+session_start();
 
-  session_unset();
+session_unset();
 
-  session_destroy();
+session_destroy();
 
-  header('Location: /proyecto-3-BH/proyecto%20utu/suizo/index.php');
-?>
+header('Location: /proyecto-3BH/');

@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-
+$connect = mysqli_connect("localhost", "root", "", "NetClip");
 require 'assets/scripts/database.php';
 
 if (isset($_SESSION['user_id'])) {
@@ -23,15 +23,39 @@ if (isset($_SESSION['user_id'])) {
 <html lang="es">
 
 <head>
-  <script src="https://kit.fontawesome.com/1e010d6631.js" crossorigin="anonymous"></script>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="assets/style/style.css?v=<?php echo time(); ?>">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://kit.fontawesome.com/68768a5d73.js" crossorigin="anonymous"></script>
   <title>Suizo</title>
+
+  <script>
+    $(document).ready(function() {
+
+      $("#hover-cont").mouseover(function() {
+        $("#busca-input").removeClass("busca-noshow").addClass("busca-show");
+      });
+
+      $("#hover-cont").mouseout(function() {
+        $("#busca-input").removeClass("busca-show").addClass("busca-noshow");
+      });
+
+      $("#hover-cont").focusin(function() {
+        $("#busca-input").removeClass("busca-noshow").addClass("busca-show");
+      });
+
+      $("#hover-cont").focusout(function() {
+        $("#busca-input").removeClass("busca-show").addClass("busca-noshow");
+      });
+
+    });
+  </script>
 </head>
 
 <body>
@@ -39,12 +63,13 @@ if (isset($_SESSION['user_id'])) {
     <div class="title-container">
       <h1 class="title">SUIZO</h1>
       <div class="nav1">
-        <div id="sb-search" class="sb-search">
-          <form>
-            <input class="sb-search-input" placeholder=" Ingrese busqueda" type="text" name="search">
-            <input class="sb-search-submit" type="submit">
-            <span class="sb-icon-search"><i class="fas fa-search"></i></span>
-          </form>
+        <div class="div-search">
+          <div id="hover-cont">
+            <form action="catalogo.php" method="POST" class="form-imput">
+              <input type="text" value="" id="busca-input" class="busca-noshow">
+              <input type="image" src="./assets/media/buttons/lupa.png" class="submit-img" />
+            </form>
+          </div>
         </div>
         <?php if (!empty($user)) : ?>
           <div class="dropdown">
@@ -60,11 +85,11 @@ if (isset($_SESSION['user_id'])) {
           <a class="button-a" data-bs-toggle="modal" href="#login_modal" role="button">Iniciar Sesión</a>
 
         <?php endif; ?>
-        <div class="dropdown" tabindex="0">
-          <button class="nav_menu" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false" tabindex="0">
+        <div class="dropdown">
+          <button class="nav_menu" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
             <img src="./assets/media/buttons/menu1.svg" alt="boton menu" />
           </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
             <li class="item"><a class="dropdown-i" href="./index.php">INICIO</a></li>
             <li class="item"><a class="dropdown-i" href="#">EMPRESA</a></li>
             <li class="item"><a class="dropdown-i" href="./catalogo.php">CATALOGO</a></li>
@@ -73,27 +98,7 @@ if (isset($_SESSION['user_id'])) {
         </div>
       </div>
     </div>
-    </div>
-    <!-- <div>
-      <form action="" method="get">
-        <div class="buscar">
-          <input type="text" name="buscar">
-          <div class="boton">
-            <i class="fas fa-search icon"></i>
-          </div>
-        </div>
-      </form>
-    </div> -->
 
-    <!-- <?php
-          if (isset($_GET['enviar'])) {
-            $buscar = $_GET['buscar'];
-            $consulta = $con->query("SELECT * FROM catalogo WHERE nombre LIKE '%$buscar%'");
-            while ($row = $consulta->fetch_array()) {
-              echo $row['nombre'] . '<br>';
-            }
-          }
-          ?> -->
   </header>
   <div class="modal fade" id="login_modal" aria-hidden="true" aria-labelledby="exampleModalLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -114,7 +119,7 @@ if (isset($_SESSION['user_id'])) {
 
             if ($results > 0 && password_verify($_POST['Password-Login'], $results['Password'])) {
               $_SESSION['user_id'] = $results['ID_usuarios'];
-              header('Location: /proyecto-3-BH/proyecto%20utu/suizo/index.php');
+              header('Location: /proyecto-3BH');
             } else {
               $message = 'E-mail o Password incorrecto';
             }
@@ -183,7 +188,7 @@ if (isset($_SESSION['user_id'])) {
               <?php endif; ?>
 
               <h3 class="sub-title">Formulario Registro</h3>
-              <!--usar la clase del h3 -->
+
               <section id="login">
                 <div class="field">
                   <label for="Nombre">Ingrese su Nombre</label>
@@ -239,59 +244,48 @@ if (isset($_SESSION['user_id'])) {
       </button>
     </div>
   </div>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/classie/1.0.1/classie.min.js'></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js'></script>
-  <script src="./assets/scripts/script.js"></script>
+  <section>
+    <div class="catalogo-index">
+      <?php
+      $query = "SELECT * FROM catalogo WHERE especial LIKE especial";
+
+      $result = mysqli_query($connect, $query);
+      if (mysqli_num_rows($result) > 0) {
+        while ($row = mysqli_fetch_array($result)) {
+      ?>
+
+          <div class="col-sm-3">
+
+            <form method="post" action="catalogo.php?action=add&id=<?php echo $row["ID_productos"]; ?>">
+              <div class="div-catalogo">
+                <img src="assets/media/images/<?php echo $row["Img_link"]; ?>" class="img-catalogo"><br>
+                <div class="centrar">
+                  <h4 class="name"><?php echo $row["Nombre"]; ?></h4>
+
+                  <h4 class="text-danger"><?php echo $row['Precio']; ?></h4>
+                </div>
+                <div class="submit-catalogo">
+                  <input type="number" min=1 name="quantity" value=1 class="cantidad" />
+
+                  <input type="submit" name="add_to_cart" class="button-catalogo" value="Add to Cart" />
+                </div>
+              </div>
+            </form>
+
+          </div>
+      <?php
+        }
+      }
+      ?>
+    </div>
+  </section>
+  <?php
+  require 'assets/scripts/footer.php';
+  ?>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
-<footer>
-  <div id=footer>
-    <div class="row">
-
-      <div class="col-md-4">
-        <p class="sobrenosotros">Sobre nosotros</p>
-        <p>Empresa</p>
-        <p>Proveedores</p>
-        <p>Contacto</p>
-        <p>Fundacion</p>
-        <p>Politicas</p>
-
-      </div>
-      <div class="col-md-4">
-        <p class="informacion">Informacion util</p>
-        <p>Preguntas Frecuentes</p>
-        <p>Formas de pago</p>
-        <p>Metodos de envio</p>
-        <p>Bases y condiciones</p>
-        <p>Metodos de envio</p>
-        <P>Bases y condiciones</P>
-
-      </div>
-      <div class="col-md-4">
-        <p class="servicios">Servicios</p>
-        <P>Suscripcion</P>
-        <p>Click & Go</p>
-        <p>Pago Facturas</p>
-        <p>Venta</p>
-      </div>
-
-    </div>
-    <div id=piedepagina>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12">
-            <p class="derechos">
-              Derechos Reservados <span>| By NetClip</span>
-            </p>
-          </div>
-
-        </div>
-
-      </div>
-    </div>
-</footer>
 
 </html>

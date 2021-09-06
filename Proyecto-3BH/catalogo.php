@@ -31,8 +31,32 @@ if (isset($_SESSION['user_id'])) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="assets/style/style.css?v=<?php echo time(); ?>">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://kit.fontawesome.com/68768a5d73.js" crossorigin="anonymous"></script>
   <title>Suizo</title>
+
+  <script>
+    $(document).ready(function() {
+
+      $("#hover-cont").mouseover(function() {
+        $("#busca-input").removeClass("busca-noshow").addClass("busca-show");
+      });
+
+      $("#hover-cont").mouseout(function() {
+        $("#busca-input").removeClass("busca-show").addClass("busca-noshow");
+      });
+
+      $("#hover-cont").focusin(function() {
+        $("#busca-input").removeClass("busca-noshow").addClass("busca-show");
+      });
+
+      $("#hover-cont").focusout(function() {
+        $("#busca-input").removeClass("busca-show").addClass("busca-noshow");
+      });
+
+    });
+  </script>
+
 
 </head>
 
@@ -40,40 +64,41 @@ if (isset($_SESSION['user_id'])) {
   <header class="header">
     <div class="title-container">
       <h1 class="title">SUIZO</h1>
+
       <div class="nav1">
-        <div id="sb-search" class="sb-search">
-          <form method="POST">
-            <input class="sb-search-input" placeholder=" Ingrese busqueda" type="text" name="search">
-            <input class="sb-search-submit" type="submit">
-            <span class="sb-icon-search"><i class="fas fa-search"></i></span>
-          </form>
-        </div>
-        <?php if (!empty($user)) : ?>
+        <div class="nav1-content">
+          <div id="hover-cont" class="div-search">
+            <form action="catalogo.php" method="POST" class="form-imput">
+              <input type="text" name="search" value="" id="busca-input" class="busca-noshow">
+              <input type="image" src="./assets/media/buttons/lupa.png" class="submit-img" />
+            </form>
+          </div>
+          <?php if (!empty($user)) : ?>
+            <div class="dropdown">
+              <button class="dropdown_nav" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                <?= $user['Nombre'] ?> <?= $user['Apellido'] ?>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li class="item"><a class="dropdown-i" href="assets/scripts/logout.php">Cerrar Seción</a></li>
+                <li class="item"><a class="dropdown-i" href="#">Suscripcion</a></li>
+              </ul>
+            </div>
+          <?php else : ?>
+            <a class="button-a" data-bs-toggle="modal" href="#login_modal" role="button">Iniciar Sesión</a>
+          <?php endif; ?>
           <div class="dropdown">
-            <button class="dropdown_nav" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-              <?= $user['Nombre'] ?> <?= $user['Apellido'] ?>
+            <button class="nav_menu" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+              <img src="./assets/media/buttons/menu1.svg" alt="boton menu" />
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-              <li class="item"><a class="dropdown-i" href="assets/scripts/logout.php">Cerrar Seción</a></li>
-              <li class="item"><a class="dropdown-i" href="#">Suscripcion</a></li>
+              <li class="item"><a class="dropdown-i" href="./index.php">INICIO</a></li>
+              <li class="item"><a class="dropdown-i" href="#">EMPRESA</a></li>
+              <li class="item"><a class="dropdown-i" href="./catalogo.php">CATALOGO</a></li>
+              <li class="item"><a class="dropdown-i" href="#">CONTACTO</a></li>
             </ul>
           </div>
-        <?php else : ?>
-          <a class="button-a" data-bs-toggle="modal" href="#login_modal" role="button">Iniciar Sesión</a>
-        <?php endif; ?>
-        <div class="dropdown">
-          <button class="nav_menu" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="./assets/media/buttons/menu1.svg" alt="boton menu" />
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li class="item"><a class="dropdown-i" href="./index.php">INICIO</a></li>
-            <li class="item"><a class="dropdown-i" href="#">EMPRESA</a></li>
-            <li class="item"><a class="dropdown-i" href="./catalogo.php">CATALOGO</a></li>
-            <li class="item"><a class="dropdown-i" href="#">CONTACTO</a></li>
-          </ul>
         </div>
       </div>
-    </div>
   </header>
   <div class="modal fade" id="login_modal" aria-hidden="true" aria-labelledby="exampleModalLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -94,7 +119,7 @@ if (isset($_SESSION['user_id'])) {
 
             if ($results > 0 && password_verify($_POST['Password-Login'], $results['Password'])) {
               $_SESSION['user_id'] = $results['ID_usuarios'];
-              header('Location: /proyecto-3-BH/proyecto%20utu/suizo/index.php');
+              header('Location: /proyecto-3BH');
             } else {
               $message = 'E-mail o Password incorrecto';
             }
@@ -199,6 +224,10 @@ if (isset($_SESSION['user_id'])) {
 
   <?php
   $q = $_POST['search'];
+
+  if ($q == "") {
+    $query = "SELECT * FROM catalogo ";
+  }
   $query = "SELECT * FROM catalogo WHERE Nombre LIKE '%" . $q . "%' ";
 
   $result = mysqli_query($connect, $query);
@@ -227,10 +256,9 @@ if (isset($_SESSION['user_id'])) {
     }
   }
   ?>
-  </div>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/classie/1.0.1/classie.min.js'></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js'></script>
-  <script src="./assets/scripts/script.js"></script>
+  <?php
+  require 'assets/scripts/footer.php';
+  ?>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
