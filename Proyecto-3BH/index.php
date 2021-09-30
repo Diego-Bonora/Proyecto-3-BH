@@ -16,6 +16,7 @@ if (isset($_SESSION['user_id'])) {
     $user = $results;
   }
 }
+
 ?>
 
 
@@ -23,12 +24,12 @@ if (isset($_SESSION['user_id'])) {
 <html lang="es">
 
 <head>
+
   <meta charset="UTF-8" />
   <meta http - equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
-  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="assets/style/style.css?v=<?php echo time(); ?>">
@@ -60,9 +61,7 @@ if (isset($_SESSION['user_id'])) {
 </head>
 
 <body>
-  <?php
-  require 'header.php';
-  ?>
+  <?php require './assets/scripts/header.php'; ?>
   <div class="carousel-container">
     <div id="carouselExampleControls" class="carousel slide carousel-fade" data-bs-ride="carousel">
       <div class="carousel-inner">

@@ -88,7 +88,6 @@
                                 <li><i class="fas fa-phone"></i> 01921124</li>
                                 <li><i class="fas fa-envelope"></i> <a href="#">Correo@gmail.com</a></li>
                             </ul>
-                            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Iusto corrupti maiores nobis quod facere velit officiis aspernatur ea modi necessitatibus.</p>
                             <p><a href="#">suizo.com</a></p>
 
                         </div>
