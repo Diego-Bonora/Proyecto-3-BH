@@ -16,10 +16,14 @@
 </head>
 
 <body>
+    <?php $firstTime = 0; ?>
     <header class="header">
         <div class="title-container">
-            <h1 class="title">SUIZO</h1>
+            <h1 class="title">SUIZO Market</h1>
+            <?php
 
+
+            ?>
             <div class="nav1">
                 <div class="div-search">
                     <div id="hover-cont">
@@ -29,9 +33,14 @@
                         </form>
                     </div>
                 </div>
-                <div>
-                    <a href="mostrarCarrito.php" class="nav-carrito"> <img src="./assets/media/buttons/carrito.png" /></a>
-
+                <div class="nav-carrito">
+                    <a href="carrito.php" class="img-carrito"> <img src="./assets/media/buttons/carrito.png" /></a>
+                    <div class="p-nav">
+                        <div class="img-num"><img src="./assets/media/buttons/msg-carrito.png" /></div>
+                        <a href="carrito.php"><?php
+                                                echo (empty($_SESSION['CARRITO'])) ? 0 : count($_SESSION['CARRITO']);
+                                                ?></a>
+                    </div>
                 </div>
                 <?php if (!empty($user)) : ?>
                     <div class="dropdown">
@@ -71,41 +80,51 @@
                     <?php
 
                     $message = '';
-
-                    if (!empty($_POST['EmailLogin']) && !empty($_POST['Password-Login'])) {
+                    if (!empty($_POST['EmailLogin']) && !empty($_POST['PasswordLogin'])) {
                         $records = $conn->prepare('SELECT ID_usuarios, Email, Password FROM usuarios WHERE Email=:EmailLogin');
                         $records->bindParam(':EmailLogin', $_POST['EmailLogin']);
                         $records->execute();
                         $results = $records->fetch(PDO::FETCH_ASSOC);
+                        if ($results != null) {
+                            if (count($results) > 0 && password_verify($_POST['PasswordLogin'], $results['Password'])) {
+                                $firstTime = $firstTime + 1;
+                    ?><script>
+                                    window.onload = function() {
+                                        if (!window.location.hash) {
+                                            window.location = window.location + '#loaded';
+                                            window.location.reload();
+                                            alert("bienvenido");
+                                        }
+                                    }
+                                </script><?php
+                                            $_SESSION['user_id'] = $results['ID_usuarios'];
+                                        } else {
+                                            echo '<script>';
+                                            echo 'alert("contraseña incorrecta")';
+                                            echo '</script>';
+                                        }
+                                    } else {
+                                        echo '<script>';
+                                        echo 'alert("Email incorrecto")';
+                                        echo '</script>';
+                                    }
+                                }
 
-                        if ($results > 0 && password_verify($_POST['Password-Login'], $results['Password'])) {
-                            $_SESSION['user_id'] = $results['ID_usuarios'];
-                        } else {
-                            echo '<script language="javascript">';
-                            echo 'alert("Email o Password incorrecto")';
-                            echo '</script>';
 
-                            $mensaje = 'ya existe ese Email';
-                        }
-                    }
-                    ?>
-                    <form onsubmit="setTimeout(function(){window.location.reload();},10);" class="form" action="" method="post" id="prueba">
+                                            ?>
+                    <form class="form" action="" method="POST" id="Login">
                         <div>
                             <h3 class="sub-title">Iniciar sesión</h3>
-                            <!--usar la clase del h3 -->
                             <section id="login">
                                 <div class="field">
                                     <label for="nombre">E-mail</label>
-                                    <input type="Email" class="form-input" id="form-input" placeholder="E-mail" name="EmailLogin" />
+                                    <input type="Email" required class="form-input" placeholder="E-mail" name="EmailLogin" />
                                 </div>
                                 <div class="field">
                                     <label for="password">Password</label>
-                                    <input type="password" class="form-input" id="form-input" placeholder="Password" name="Password-Login" />
+                                    <input type="password" required class="form-input" placeholder="Password" name="PasswordLogin" />
                                 </div>
                                 <input type="submit"></input>
-                                <?php if (!empty($message)) : ?>
-                                    <?= $message ?>
-                                <?php endif; ?>
                             </section>
                         </div>
                         <div>
@@ -129,7 +148,6 @@
                     <?php
 
                     $message = '';
-
                     if (!empty($_POST['Nombre']) && !empty($_POST['Apellido']) && !empty($_POST['Email']) && !empty($_POST['Password'])) {
                         $sql = "SELECT Email FROM Usuarios WHERE Email = :Email";
                         $records = $conn->prepare($sql);
@@ -138,12 +156,9 @@
                         $results = $records->fetch(PDO::FETCH_ASSOC);
                         if ($results != null) {
                             if (count($results) > 0) {
-
-                                echo '<script language="javascript">';
+                                echo '<script>';
                                 echo 'alert("ya existe ese Email")';
                                 echo '</script>';
-
-                                $mensaje = 'ya existe ese Email';
                             }
                         } else {
                             $sql = "INSERT INTO usuarios (Nombre, Apellido, Email, Password) VALUES (:Nombre, :Apellido, :Email, :Password)";
@@ -170,27 +185,24 @@
                             <section id="login">
                                 <div class="field">
                                     <label for="Nombre">Ingrese su Nombre</label>
-                                    <input type="text" class="form-input" id="form-input" placeholder="Nombre" name="Nombre" />
+                                    <input type="text" class="form-input" placeholder="Nombre" name="Nombre" />
                                 </div>
                                 <div class="field">
                                     <label for="Apellidos">Ingrese su apellido</label>
-                                    <input type="text" class="form-input" id="form-input" placeholder="Apellido" name="Apellido" />
+                                    <input type="text" class="form-input" placeholder="Apellido" name="Apellido" />
                                 </div>
                                 <div class="field">
                                     <label for="E-mail">Ingrese su E-mail</label>
-                                    <input type="email" class="form-input" id="form-input" placeholder="E-mail" name="Email" />
+                                    <input type="email" class="form-input" placeholder="E-mail" name="Email" />
                                 </div>
                                 <div class="field">
                                     <label for="Password">Ingrese su Contraseña</label>
-                                    <input type="Password" class="form-input" id="form-input" placeholder="Password" name="Password" />
+                                    <input type="Password" class="form-input" placeholder="Password" name="Password" />
                                 </div>
                                 <p>
                                     <input type="checkbox" name="condiciones" checked="checked" />
                                     Estoy de acuerdo con <a href="Terminos.php">Términos y Condiciones</a>
                                 </p>
-                                <?php if (!empty($message)) : ?>
-                                    <p><?= $message ?> </p>
-                                <?php endif; ?>
                                 <input type="submit"></input>
                             </section>
                         </div>
@@ -203,5 +215,6 @@
     </div>
     </div>
 </body>
+
 
 </html>

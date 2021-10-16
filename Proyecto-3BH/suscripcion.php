@@ -168,26 +168,23 @@ if (!empty($_POST['Nombre_T']) && !empty($_POST['Apellido_T']) && !empty($_POST[
         <p class="suscribete"> Suscribete para tener acceso a los descuentos y otros bonos de la tienda </p>
         <a class="button-b" data-bs-toggle="modal" href="#suscripcion" role="button">Suscribete</a>
     <?php else : ?>
-        <table class="tabla-puntos">
-            <tr>
-                <td class="separacion">Puntos</td>
-                <td>
-                    <?php
-                    $records = $conn->prepare('SELECT ID_usuarios, puntos FROM usuarios WHERE ID_usuarios = :ID_usuarios');
-                    $records->bindParam(':ID_usuarios', $_SESSION['user_id']);
-                    $records->execute();
-                    $results = $records->fetch(PDO::FETCH_ASSOC);
-                    if ($results != null) {
-                        if (count($results) > 0) {
-                            $puntos = $results;
-                            echo $puntos['puntos'];
-                        }
-                    } else {
+        <section id="tabla-fondo"></section>
+        <div class="tabla-puntos">
+            <p class="separacion">Puntos
+                <?php
+                $records = $conn->prepare('SELECT ID_usuarios, puntos FROM usuarios WHERE ID_usuarios = :ID_usuarios');
+                $records->bindParam(':ID_usuarios', $_SESSION['user_id']);
+                $records->execute();
+                $results = $records->fetch(PDO::FETCH_ASSOC);
+                if ($results != null) {
+                    if (count($results) > 0) {
+                        $puntos = $results;
+                        echo $puntos['puntos'];
                     }
-                    ?>
-                </td>
-            </tr>
-        </table>
+                } else {
+                }
+                ?></p>
+        </div>
     <?php endif; ?>
     <?php require 'assets/scripts/footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>

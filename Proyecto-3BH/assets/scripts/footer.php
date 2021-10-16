@@ -69,11 +69,11 @@
                                     <label for="asunto">Asunto</label>
                                     <input type="text" nombre="asunto" id="asunto" required>
                                 </p>
-                                <p class="block">
+                                <p class="block-footer">
                                     <label for="mensaje">Mensaje</label required>
                                     <textarea name="message" rows="3"></textarea>
                                 </p>
-                                <p class="block">
+                                <p class="block-footer">
                                     <button type="submit">Enviar</button>
                                 </p>
 

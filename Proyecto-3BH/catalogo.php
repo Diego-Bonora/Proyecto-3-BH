@@ -2,6 +2,7 @@
 session_start();
 $connect = mysqli_connect("localhost", "root", "", "NetClip");
 require 'assets/scripts/database.php';
+require 'assets/scripts/carritocontent.php';
 
 if (isset($_SESSION['user_id'])) {
   $records = $conn->prepare('SELECT ID_usuarios, Email, Password, Nombre, Apellido FROM usuarios WHERE ID_usuarios = :ID_usuarios');
@@ -60,52 +61,92 @@ if (isset($_SESSION['user_id'])) {
 </head>
 <?php require './assets/scripts/header.php'; ?>
 
-<body>
 
+<body>
+  <section id="tabla-fondo"></section>
 
   <?php
+  if (!empty($mensaje)) {
+  ?>
+    <div class="alert-top">
+      <p><?php echo $mensaje; ?></p>
+      <a class="button-alert" href="carrito.php">ver carrito</a>
+    </div>
+    <?php
+  }
+
+
+
+  if (isset($_GET["page"])) {
+    $page = $_GET["page"];
+  } else {
+    $page = 1;
+  }
+
+  $num_per_page = 12;
+  $start_from = ($page - 1) * 12;
+
   if (isset($_POST['search'])) {
     $q = $_POST['search'];
   } else {
     $q = "";
   }
 
-
   if ($q == "") {
-    $query = "SELECT * FROM catalogo ";
+    $query = "SELECT * FROM catalogo limit $start_from,$num_per_page";
   }
-  $query = "SELECT * FROM catalogo WHERE Nombre LIKE '%" . $q . "%' ";
+  $query = "SELECT * FROM catalogo WHERE Nombre LIKE '%" . $q . "%' limit $start_from,$num_per_page";
+
+
 
   $result = mysqli_query($connect, $query);
   if (mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_array($result)) {
-  ?>
+    ?>
       <div class="col-sm-3">
+        <div class="div-catalogo">
+          <img src="assets/media/images/<?php echo $row["Img_link"]; ?>" class="img-catalogo"><br>
+          <div class="centrar">
+            <h4 class="name"><?php echo $row["Nombre"]; ?></h4>
 
-        <form method="post" action="catalogo.php?action=add&id=<?php echo $row["ID_productos"]; ?>">
-          <div class="div-catalogo">
-            <img src="assets/media/images/<?php echo $row["Img_link"]; ?>" class="img-catalogo"><br>
-            <div class="centrar">
-              <h4 class="name"><?php echo $row["Nombre"]; ?></h4>
+            <h4 class="text-danger">$<?php echo $row["Precio"]; ?></h4>
+          </div>
 
-              <h4 class="text-danger"><?php echo $row['Precio']; ?></h4>
-            </div>
-            <div class="submit-catalogo">
+          <div class="submit-catalogo">
+            <form action="" method="post">
               <input type="number" min=1 value="1" class="cantidad" />
-              <button class="button-catalogo" name="btnAccion" value="Agregar" type="submit" type="button">
+
+              <input type="hidden" name="id" id="id" value="<?php echo $row["ID_productos"]; ?>">
+              <input type="hidden" name="nombre" id="nombre" value="<?php echo $row["Nombre"]; ?>">
+              <input type="hidden" name="precio" id="precio" value="<?php echo $row["Precio"]; ?>">
+              <input type="hidden" name="cantidad" id="cant" value="<?php echo 1; ?>">
+
+              <button class="button-catalogo" name="btnAccion" value="Agregar" type="submit">
                 Agregar al carrito
               </button>
-            </div>
-        </form>
-      </div>
-      </div>
-      </form>
+            </form>
+          </div>
+        </div>
       </div>
   <?php
     }
   }
+
+  $sql = "SELECT * FROM catalogo ";
+  $rs_result = mysqli_query($connect, $sql);
+  $total_records = mysqli_num_rows($rs_result);
+  $total_pages = ceil($total_records / $num_per_page);
+
   ?>
   <?php
+
+
+  echo "<div class='paginacion'>";
+  for ($i = 1; $i <= $total_pages; $i++) {
+    echo "<div class='paginacion-num'><a href='catalogo.php?page=" . $i . "'>" . $i . "</a></div>";
+  }
+  echo "</div>";
+
   require 'assets/scripts/footer.php';
   ?>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>

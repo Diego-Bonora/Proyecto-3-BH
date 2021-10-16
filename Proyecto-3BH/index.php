@@ -3,6 +3,7 @@
 session_start();
 $connect = mysqli_connect("localhost", "root", "", "NetClip");
 require 'assets/scripts/database.php';
+require 'assets/scripts/carritocontent.php';
 
 if (isset($_SESSION['user_id'])) {
   $records = $conn->prepare('SELECT ID_usuarios, Email, Password, Nombre, Apellido FROM usuarios WHERE ID_usuarios = :ID_usuarios');
@@ -85,6 +86,7 @@ if (isset($_SESSION['user_id'])) {
       </button>
     </div>
   </div>
+
   <section>
     <div class="catalogo-index">
       <?php
@@ -96,22 +98,28 @@ if (isset($_SESSION['user_id'])) {
       ?>
 
           <div class="col-sm-3">
+            <div class="div-catalogo">
+              <img src="assets/media/images/<?php echo $row["Img_link"]; ?>" class="img-catalogo"><br>
+              <div class="centrar">
+                <h4 class="name"><?php echo $row["Nombre"]; ?></h4>
 
-            <form method="post" action="catalogo.php?action=add&id=<?php echo $row["ID_productos"]; ?>">
-              <div class="div-catalogo">
-                <img src="assets/media/images/<?php echo $row["Img_link"]; ?>" class="img-catalogo"><br>
-                <div class="centrar">
-                  <h4 class="name"><?php echo $row["Nombre"]; ?></h4>
-
-                  <h4 class="text-danger"><?php echo $row['Precio']; ?></h4>
-                </div>
-                <div class="submit-catalogo">
-                  <input type="number" min=1 name="quantity" value=1 class="cantidad" />
-
-                  <input type="submit" name="add_to_cart" class="button-catalogo" value="Add to Cart" />
-                </div>
+                <h4 class="text-danger"><?php echo $row['Precio']; ?></h4>
               </div>
-            </form>
+              <div class="submit-catalogo">
+                <form action="" method="post">
+                  <input type="number" min=1 value="1" class="cantidad" />
+
+                  <input type="hidden" name="id" id="id" value="<?php echo $row["ID_productos"]; ?>">
+                  <input type="hidden" name="nombre" id="nombre" value="<?php echo $row["Nombre"]; ?>">
+                  <input type="hidden" name="precio" id="precio" value="<?php echo $row["Precio"]; ?>">
+                  <input type="hidden" name="cantidad" id="cant" value="<?php echo 1; ?>">
+
+                  <button class="button-catalogo" name="btnAccion" value="Agregar" type="submit">
+                    Agregar al carrito
+                  </button>
+                </form>
+              </div>
+            </div>
 
           </div>
       <?php
