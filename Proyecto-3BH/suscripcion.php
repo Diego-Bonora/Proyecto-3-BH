@@ -109,7 +109,6 @@ if (!empty($_POST['Nombre_T']) && !empty($_POST['Apellido_T']) && !empty($_POST[
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalToggleLabel">Modal 1</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -137,7 +136,7 @@ if (!empty($_POST['Nombre_T']) && !empty($_POST['Apellido_T']) && !empty($_POST[
                                 <input type="number" placeholder="CVV" min=1 name="CVV_T">
                             </div>
                             <p>
-                                <input type="checkbox" name="condiciones" checked="checked" />
+                                <input type="checkbox" name="condiciones" require />
                                 Estoy de acuerdo con <a href="#">Términos y Condiciones</a>
                             </p>
                             <input type="submit" class="button-1" value="SUSCRIBIRCE">

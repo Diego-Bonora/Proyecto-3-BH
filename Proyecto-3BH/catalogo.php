@@ -112,20 +112,27 @@ if (isset($_SESSION['user_id'])) {
             <h4 class="text-danger">$<?php echo $row["Precio"]; ?></h4>
           </div>
 
-          <div class="submit-catalogo">
-            <form action="" method="post">
-              <input type="number" min=1 value="1" class="cantidad" />
+          <form class="submit-catalogo" action="" method="post">
 
-              <input type="hidden" name="id" id="id" value="<?php echo $row["ID_productos"]; ?>">
-              <input type="hidden" name="nombre" id="nombre" value="<?php echo $row["Nombre"]; ?>">
-              <input type="hidden" name="precio" id="precio" value="<?php echo $row["Precio"]; ?>">
-              <input type="hidden" name="cantidad" id="cant" value="<?php echo 1; ?>">
+            <script>
+              document.querySelector(".cantidad").addEventListener("keypress", function(evt) {
+                if (evt.which != 8 && evt.which != 0 && evt.which < 48 || evt.which > 57) {
+                  evt.preventDefault();
+                }
+              });
+            </script>
 
-              <button class="button-catalogo" name="btnAccion" value="Agregar" type="submit">
-                Agregar al carrito
-              </button>
-            </form>
-          </div>
+            <input type="number" min=1 max="<?php echo $row["stock"]; ?>" value="1" name="cantidad" id="cant" class="cantidad" />
+
+            <input type="hidden" name="id" id="id" value="<?php echo $row["ID_productos"]; ?>">
+            <input type="hidden" name="nombre" id="nombre" value="<?php echo $row["Nombre"]; ?>">
+            <input type="hidden" name="precio" id="precio" value="<?php echo $row["Precio"]; ?>">
+
+
+            <button class="button-catalogo" name="btnAccion" value="Agregar" type="submit">
+              Agregar al carrito
+            </button>
+          </form>
         </div>
       </div>
   <?php

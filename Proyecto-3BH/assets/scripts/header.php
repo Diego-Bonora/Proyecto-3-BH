@@ -19,7 +19,9 @@
     <?php $firstTime = 0; ?>
     <header class="header">
         <div class="title-container">
-            <h1 class="title">SUIZO Market</h1>
+            <a href="index.php">
+                <h1 class="title">SUIZO Market</h1>
+            </a>
             <?php
 
 
@@ -36,10 +38,30 @@
                 <div class="nav-carrito">
                     <a href="carrito.php" class="img-carrito"> <img src="./assets/media/buttons/carrito.png" /></a>
                     <div class="p-nav">
-                        <div class="img-num"><img src="./assets/media/buttons/msg-carrito.png" /></div>
-                        <a href="carrito.php"><?php
-                                                echo (empty($_SESSION['CARRITO'])) ? 0 : count($_SESSION['CARRITO']);
-                                                ?></a>
+                        <?php if (isset($_SESSION['CARRITO'])) : ?>
+                            <?php if (count($_SESSION['CARRITO']) < 10) : ?>
+                                <div class="img-numA"><img src="./assets/media/buttons/msg-carrito.png" /></div>
+                                <a class="a-navA" href="carrito.php">
+                                    <?php
+                                    echo (empty($_SESSION['CARRITO'])) ? 0 : count($_SESSION['CARRITO']);
+                                    ?>
+                                </a>
+                            <?php else : ?>
+                                <div class="img-numB"><img src="./assets/media/buttons/msg-carrito.png" /></div>
+                                <a class="a-navB" href="carrito.php">
+                                    <?php
+                                    echo (empty($_SESSION['CARRITO'])) ? 0 : count($_SESSION['CARRITO']);
+                                    ?>
+                                </a>
+                            <?php endif; ?>
+                        <?php else : ?>
+                            <div class="img-numA"><img src="./assets/media/buttons/msg-carrito.png" /></div>
+                            <a class="a-navA" href="carrito.php">
+                                <?php
+                                echo (empty($_SESSION['CARRITO'])) ? 0 : count($_SESSION['CARRITO']);
+                                ?>
+                            </a>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <?php if (!empty($user)) : ?>
@@ -200,7 +222,7 @@
                                     <input type="Password" class="form-input" placeholder="Password" name="Password" />
                                 </div>
                                 <p>
-                                    <input type="checkbox" name="condiciones" checked="checked" />
+                                    <input type="checkbox" name="condiciones" require />
                                     Estoy de acuerdo con <a href="Terminos.php">Términos y Condiciones</a>
                                 </p>
                                 <input type="submit"></input>

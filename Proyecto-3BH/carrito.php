@@ -16,6 +16,39 @@ if (isset($_SESSION['user_id'])) {
         $user = $results;
     }
 }
+
+
+if (!empty($_POST['Nombre_T']) && !empty($_POST['Apellido_T']) && !empty($_POST['Numero_T']) && !empty($_POST['Vencimiento_T']) && !empty($_POST['CVV_T'])) {
+    $sql = "SELECT Numero_T FROM tarjetas WHERE Numero_T = :Numero_T";
+    $records = $conn->prepare($sql);
+    $records->bindParam(':Numero_T', $_POST['Numero_T']);
+    $records->execute();
+    $results = $records->fetch(PDO::FETCH_ASSOC);
+    if ($results != null) {
+        if (count($results) > 0) {
+            echo '<script language="javascript">';
+            echo 'alert("esa tarjeta ya se registro")';
+            echo '</script>';
+        }
+    } else {
+        $sql = "INSERT INTO tarjetas (Nombre_T, Apellido_T, Numero_T, Vencimiento_T, CVV_T) VALUES (:Nombre_T, :Apellido_T, :Numero_T, :Vencimiento_T, :CVV_T)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':Nombre_T', $_POST['Nombre_T']);
+        $stmt->bindValue(':Apellido_T', $_POST['Apellido_T']);
+        $stmt->bindValue(':Numero_T', $_POST['Numero_T']);
+        $stmt->bindValue(':Vencimiento_T', $_POST['Vencimiento_T']);
+        $stmt->bindValue(':CVV_T', $_POST['CVV_T']);
+
+        if ($stmt->execute()) {
+            $sql = "UPDATE usuarios SET suscripto = 'si' WHERE ID_usuarios = " . $_SESSION['user_id'] . "";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+        } else {
+            $message = '';
+        }
+    }
+}
+
 ?>
 
 
@@ -65,48 +98,114 @@ if (isset($_SESSION['user_id'])) {
     <section id="tabla-fondo"></section>
     <?php if (!empty($_SESSION['CARRITO'])) { ?>
         <div class="alert alert-success"> <?php echo $mensaje; ?> </div>
-        <table class="table table-light table-border">
-            <tbody>
-                <tr>
-                    <th width="40%">Descripcion</th>
-                    <th width="15%">Cantidad</th>
-                    <th width="20%">Precio</th>
-                    <th width="20%">Total</th>
-                    <th width="5%">
-                        <form action="" method="post">
-                            <input type="hidden" name="id" id="id" value="<?php echo $producto['ID']; ?>">
-                            <button class="btn btn-danger" name="btnAccion" type="submit" value="EliminarT">Eliminar todo</button>
-                        </form>
-                    </th>
-                </tr>
-                <?php $total = 0; ?>
-                <?php foreach ($_SESSION['CARRITO'] as $indice => $producto) { ?>
+        <div class="carrito-table">
+            <table class="table table-light table-border">
+                <tbody>
                     <tr>
-                        <td width="40%"><?php echo $producto['NOMBRE'] ?></td>
-                        <td width="15%"><?php echo $producto['CANTIDAD'] ?></td>
-                        <td width="20%">$<?php echo $producto['PRECIO'] ?></td>
-                        <td width="20%">$<?php echo number_format($producto['PRECIO'] * $producto['CANTIDAD'], 2)  ?></td>
-                        <td width="5%">
+                        <th width="40%">Producto</th>
+                        <th width="15%">Cantidad</th>
+                        <th width="20%">Precio</th>
+                        <th width="20%">Total</th>
+                        <td width="5%" align="center">
                             <form action="" method="post">
                                 <input type="hidden" name="id" id="id" value="<?php echo $producto['ID']; ?>">
-                                <button class="btn btn-danger" name="btnAccion" type="submit" value="Eliminar">Eliminar</button>
+                                <button class="button-compra" name="btnAccion" type="submit" value="EliminarT">Eliminar todo</button>
                             </form>
                         </td>
                     </tr>
-                    <?php $total = $total + ($producto['PRECIO'] * $producto['CANTIDAD']); ?>
-                <?php } ?>
-                <tr>
-                    <td colspan="3" align="right">total</td>
-                    <td align="right">
-                        <h3>$<?php echo number_format($total, 2); ?></h3>
-                    </td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
+                    <?php $total = 0; ?>
+                    <?php foreach ($_SESSION['CARRITO'] as $indice => $producto) { ?>
+                        <tr>
+                            <td width="40%"><?php echo $producto['NOMBRE'] ?></td>
+                            <td width="15%"><?php echo $producto['CANTIDAD'] ?></td>
+                            <td width="20%">$<?php echo $producto['PRECIO'] ?></td>
+                            <td width="20%">$<?php echo number_format($producto['PRECIO'] * $producto['CANTIDAD'], 2)  ?></td>
+                            <td width="5%" align="center">
+                                <form action="" method="post">
+                                    <input type="hidden" name="id" id="id" value="<?php echo $producto['ID']; ?>">
+                                    <button class="button-compra" name="btnAccion" type="submit" value="Eliminar">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <?php $total = $total + ($producto['PRECIO'] * $producto['CANTIDAD']); ?>
+                    <?php } ?>
+                    <tr>
+                        <th colspan="3"></th>
+                        <td>
+                            <h3>$<?php echo number_format($total, 2); ?></h3>
+                        </td>
+                        <td>
+                            <?php if (!empty($user)) :  ?>
+                                <a class="button-compra" data-bs-toggle="modal" href="#comprar" role="button">Comprar</a>
+                            <?php else : ?>
+                                <a class="button-compra" data-bs-toggle="modal" href="#login_modal" role="button">Iniciar Sesión</a>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     <?php } else { ?>
         <div class="alert alert-success">No hay productos en el carrito</div>
     <?php } ?>
+
+
+
+
+    <div class="modal fade" id="comprar" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-2">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="carrito.php" method="POST" class="sub">
+                        <div class="sub-1">
+                            <label for="">Tarjeta de Credito</label>
+
+                            <div class="sub-2">
+                                <input type="text" placeholder="NOMBRE" maxlength="15" name="Nombre_T">
+                            </div>
+
+                            <div class="sub-2">
+                                <input type="text" placeholder="APELLIDO" maxlength="15" name="Apellido_T">
+                            </div>
+
+                            <div class="sub-2">
+                                <input type="number" placeholder="NUMERO" min=1 name="Numero_T">
+                            </div>
+
+                            <div class="sub-2">
+                                <input type="text" placeholder="MM/AA" name="Vencimiento_T">
+                            </div>
+
+                            <div class="sub-2">
+                                <input type="number" placeholder="CVV" min=1 name="CVV_T">
+                            </div>
+                            <div>
+                                <input carrito-envio type="radio" id="clickgo" name="carrito" value="clickgo">
+                                <label for="clickgo">ClickGo</label>
+                            </div>
+
+                            <div>
+                                <input class="carrito-envio" type="radio" id="envio" name="carrito" value="envio">
+                                <label for="envio">Envio</label>
+                            </div>
+
+                            <p>
+                                <input type="checkbox" name="condiciones" require />
+                                Estoy de acuerdo con <a href="#">Términos y Condiciones</a>
+                            </p>
+                            <input type="submit" class="button-compra" value="Comprar">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 

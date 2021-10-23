@@ -4,6 +4,7 @@ session_start();
 $connect = mysqli_connect("localhost", "root", "", "NetClip");
 require 'assets/scripts/database.php';
 require 'assets/scripts/carritocontent.php';
+require './assets/scripts/chatbot.php';
 
 if (isset($_SESSION['user_id'])) {
   $records = $conn->prepare('SELECT ID_usuarios, Email, Password, Nombre, Apellido FROM usuarios WHERE ID_usuarios = :ID_usuarios');
@@ -131,6 +132,30 @@ if (isset($_SESSION['user_id'])) {
   <?php
   require 'assets/scripts/footer.php';
   ?>
+  <script>
+    $(document).ready(function() {
+      $("#send-btn").on("click", function() {
+        $value = $("#data").val();
+        $msg = '<div class="user-inbox inbox"><div class="msg-header"><p>' + $value + '</p></div></div>';
+        $(".form").append($msg);
+        $("#data").val('');
+
+        $.ajax({
+          url: 'assets/scripts/message.php',
+          type: 'POST',
+          data: 'text=' + $value,
+          success: function(result) {
+            $respuesta = '<div class="bot-inbox inbox"><div class="icono"><i class="fas fa-user"></i></div><div class="msg-header"><p>' + result + '</p></div></div>';
+            $(".form").append($respuesta);
+            $(".form").scrollTop($(".form")[0].scrollHeight);
+          }
+
+        });
+      });
+    });
+  </script>
+  <script src="assets/scripts/fadein-out.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
