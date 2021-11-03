@@ -18,69 +18,11 @@
 <body>
     <footer>
         <div class="row">
-
-            <div class="footer-info" id="info-1">
-                <p class="sobrenosotros">Sobre nosotros</p>
-                <p>Empresa</p>
-                <p>Proveedores</p>
-                <p>Contacto</p>
-                <p>Fundacion</p>
-                <p>Politicas</p>
-
-            </div>
-            <div class="footer-info" id="info-2">
-                <p class="informacion">Informacion util</p>
-                <p>Preguntas Frecuentes</p>
-                <p>Formas de pago</p>
-                <p>Metodos de envio</p>
-                <p>Bases y condiciones</p>
-                <p>Metodos de envio</p>
-                <P>Bases y condiciones</P>
-
-            </div>
-            <div class="footer-info" id="info-3">
-                <p class="servicios">Servicios</p>
-                <P>Suscripcion</P>
-                <p>Click & Go</p>
-                <p>Pago Facturas</p>
-                <p>Venta</p>
-            </div>
-            <div class="footer-info" id="info-4">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" id="info-4">
                 <div class="container-cantacts">
 
                     <div class="content-wrapper">
 
-                        <div class="contact-form">
-                            <!-- <h3>Contactanos</h3>-->
-                            <form action="">
-                                <p>
-                                    <label for="fullname">Nombre</label>
-                                    <input type="text" nombre="fullname" id="fullname">
-                                </p>
-                                <p>
-                                    <label for="email">Email</label>
-                                    <input type="email" nombre="email" id="email" required>
-                                </p>
-                                <p>
-                                    <label for="phone">Telefono</label required>
-                                    <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}">
-                                </p>
-                                <p>
-                                    <label for="asunto">Asunto</label>
-                                    <input type="text" nombre="asunto" id="asunto" required>
-                                </p>
-                                <p class="block-footer">
-                                    <label for="mensaje">Mensaje</label required>
-                                    <textarea name="message" rows="3"></textarea>
-                                </p>
-                                <p class="block-footer">
-                                    <button type="submit">Enviar</button>
-                                </p>
-
-                            </form>
-
-
-                        </div>
                         <div class="contact-info">
                             <h4>Informacion</h4>
                             <ul>
@@ -97,6 +39,26 @@
                 </div>
 
             </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" id="info-1">
+                <p class="sobrenosotros">Sobre nosotros</p>
+                <p>Empresa</p>
+                <p>Politicas</p>
+
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" id="info-2">
+                <p class="informacion">Informacion util</p>
+                <p>Preguntas Frecuentes</p>
+                <p>Formas de pago</p>
+                <p>Metodos de envio</p>
+                <p>Bases y condiciones</p>
+
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" id="info-3">
+                <p class="servicios">Servicios</p>
+                <P>Suscripcion</P>
+                <p>Click & Go</p>
+            </div>
+
             <div id=piedepagina>
                 <div class="container">
                     <div class="row">

@@ -4,6 +4,8 @@ $connect = mysqli_connect("localhost", "root", "", "NetClip");
 require 'assets/scripts/database.php';
 require 'assets/scripts/carritocontent.php';
 
+$message = "";
+
 if (isset($_SESSION['user_id'])) {
     $records = $conn->prepare('SELECT ID_usuarios, Email, Password, Nombre, Apellido FROM usuarios WHERE ID_usuarios = :ID_usuarios');
     $records->bindParam(':ID_usuarios', $_SESSION['user_id']);
@@ -18,7 +20,7 @@ if (isset($_SESSION['user_id'])) {
 }
 
 
-if (!empty($_POST['Nombre_T']) && !empty($_POST['Apellido_T']) && !empty($_POST['Numero_T']) && !empty($_POST['Vencimiento_T']) && !empty($_POST['CVV_T'])) {
+if (!empty($_POST['Nombre_T']) && !empty($_POST['Apellido_T']) && !empty($_POST['Numero_T']) && !empty($_POST['Vencimiento_T']) && !empty($_POST['CVV_T']) && !empty($_POST['carrito-check']) && !empty($_POST['condiciones'])) {
     $sql = "SELECT Numero_T FROM tarjetas WHERE Numero_T = :Numero_T";
     $records = $conn->prepare($sql);
     $records->bindParam(':Numero_T', $_POST['Numero_T']);
@@ -40,17 +42,24 @@ if (!empty($_POST['Nombre_T']) && !empty($_POST['Apellido_T']) && !empty($_POST[
         $stmt->bindValue(':CVV_T', $_POST['CVV_T']);
 
         if ($stmt->execute()) {
-            $sql = "UPDATE usuarios SET suscripto = 'si' WHERE ID_usuarios = " . $_SESSION['user_id'] . "";
-            $stmt = $conn->prepare($sql);
-            $stmt->execute();
+            if ($_POST['carrito-check'] == "clickgo") {
+                echo '<script language="javascript">';
+                echo 'window.location.replace("/proyecto-3BH/ticket.php")';
+                echo '</script>';
+            } else {
+                echo '<script language="javascript">';
+                echo 'window.location.replace("/proyecto-3BH/direccion.php")';
+                echo '</script>';
+            }
         } else {
             $message = '';
         }
     }
+} else {
+    $mensaje = 'se requiere llenar todos los campos';
 }
 
 ?>
-
 
 <!DOCTYPE html>
 <html lang="es">
@@ -164,37 +173,36 @@ if (!empty($_POST['Nombre_T']) && !empty($_POST['Apellido_T']) && !empty($_POST[
                             <label for="">Tarjeta de Credito</label>
 
                             <div class="sub-2">
-                                <input type="text" placeholder="NOMBRE" maxlength="15" name="Nombre_T">
+                                <input type="text" require placeholder="NOMBRE" maxlength="15" name="Nombre_T">
                             </div>
 
                             <div class="sub-2">
-                                <input type="text" placeholder="APELLIDO" maxlength="15" name="Apellido_T">
+                                <input type="text" require placeholder="APELLIDO" maxlength="15" name="Apellido_T">
                             </div>
 
                             <div class="sub-2">
-                                <input type="number" placeholder="NUMERO" min=1 name="Numero_T">
+                                <input type="number" require placeholder="NUMERO" min=1 name="Numero_T">
                             </div>
 
                             <div class="sub-2">
-                                <input type="text" placeholder="MM/AA" name="Vencimiento_T">
+                                <input type="text" require placeholder="MM/AA" name="Vencimiento_T">
                             </div>
 
                             <div class="sub-2">
-                                <input type="number" placeholder="CVV" min=1 name="CVV_T">
+                                <input type="number" require placeholder="CVV" min=1 name="CVV_T">
                             </div>
-                            <div>
-                                <input carrito-envio type="radio" id="clickgo" name="carrito" value="clickgo">
+                            <div class="carrito-envio">
+                                <input require type="radio" id="clickgo" name="carrito-check" value="clickgo">
                                 <label for="clickgo">ClickGo</label>
                             </div>
-
-                            <div>
-                                <input class="carrito-envio" type="radio" id="envio" name="carrito" value="envio">
+                            <div class="carrito-envio">
+                                <input require type="radio" id="envio" name="carrito-check" value="envio">
                                 <label for="envio">Envio</label>
                             </div>
 
                             <p>
                                 <input type="checkbox" name="condiciones" require />
-                                Estoy de acuerdo con <a href="#">Términos y Condiciones</a>
+                                Estoy de acuerdo con <a href="Terminos.php">Términos y Condiciones</a>
                             </p>
                             <input type="submit" class="button-compra" value="Comprar">
                         </div>
@@ -212,7 +220,6 @@ if (!empty($_POST['Nombre_T']) && !empty($_POST['Apellido_T']) && !empty($_POST[
 
 <?php require 'assets/scripts/footer.php'; ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>

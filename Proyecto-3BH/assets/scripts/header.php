@@ -16,12 +16,12 @@
 </head>
 
 <body>
-    <?php $firstTime = 0; ?>
     <header class="header">
         <div class="title-container">
             <a href="index.php">
                 <h1 class="title">SUIZO Market</h1>
             </a>
+
             <?php
 
 
@@ -78,6 +78,7 @@
                     <a class="button-a" data-bs-toggle="modal" href="#login_modal" role="button">Iniciar Sesión</a>
 
                 <?php endif; ?>
+                <div class="chatbot"><?php require 'bot/chatbot.php'; ?></div>
                 <div class="dropdown">
                     <button class="nav_menu" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="./assets/media/buttons/menu1.svg" alt="boton menu" />
